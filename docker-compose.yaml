@@ -1,12 +1,36 @@
 version: '3.1'
 services:
   app:
-    image: node:16-alpine
-    command: sh -c "yarn install && yarn run start"
+    image: node:18-alpine
+    command: sh -c "npm install &&  npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all && npm run start:dev"
     ports:
-      - 80:8000
+      - 80:3000
     working_dir: /app
     volumes:
-      - './app/src:/app/src'
-      - './app/package.json:/app/package.json'
-      - './app/yarn.lock:/app/yarn.lock'
+      - './my-app/bin:/app/bin'
+      - './my-app/migrations:/app/migrations'
+      - './my-app/seeders:/app/seeders'
+      - './my-app/config:/app/config'
+      - './my-app/models:/app/models'
+      - './my-app/public:/app/public'
+      - './my-app/routes:/app/routes'
+      - './my-app/app.js:/app/app.js'
+      - './my-app/package.json:/app/package.json'
+  express-mysqldb:
+    image: mysql:8.0
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: PyoA2hGpSDQordaDAbuiQIIDS
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: youiIIDSA2hGpassword
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
