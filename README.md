@@ -1,4 +1,4 @@
-# Express + Sequelize + MySQL
+# NestJS
 主要是用來快速建立開發用環境的專案模板，不適合直接部屬在正式環境
 
 2024.6.16 
